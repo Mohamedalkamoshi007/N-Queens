@@ -166,7 +166,7 @@ public:
             pop[i]=g.randomState();
         }
         State bestEver=pop[bestState(pop)];
-        int usedGen = 0;
+        int usedGen = MAX_GEN;
         // Loop الأجيال
         for(int gen=0;gen<MAX_GEN;gen++){
             int best=bestState(pop);
@@ -229,12 +229,7 @@ public:
 };
 int main(){
     Solver s;
-    int choice;
     int cases[5][N];
-    cout<<"1 - Roulette\n";
-    cout<<"2 - Tournament\n";
-    cout<<"\nEnter Method : ";
-    cin>>choice;
     // إدخال 5 حالات
     cout<<"\nEnter 5 Cases:\n";
     for(int i=0;i<5;i++){
@@ -246,7 +241,14 @@ int main(){
         }
     }
     // تشغيل الحالات
-    for(int i=0;i<5;i++){
-        s.solve(cases[i],i+1,choice);
-    }
+// Roulette Wheel Selection
+cout<<"Roulette Wheel Selection\n";
+ for(int i=0;i<5;i++){ 
+    s.solve(cases[i],i+1,1); 
+} 
+// Tournament Selection 
+cout<<"Tournament Selection\n";
+for(int i=0;i<5;i++){ 
+    s.solve(cases[i],i+1,2);
+ }
 }
