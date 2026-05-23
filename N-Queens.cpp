@@ -1,13 +1,15 @@
 #include <iostream>
+#include <ctime>// ضفتها حتى نقدر نقارن الوقت
 using namespace std;
 
-const int N = 8;
-const int POP = 50;
-const int MAX_GEN = 500;
-const int MUTATION_RATE = 10;
+const int N = 8; // حجم المربع تبع الملكات
+const int POP = 50; // حجم الـ Population
+const int MAX_GEN = 9999;// أقصى عدد أجيال
+const int MUTATION_RATE = 10;// نسبة الـ Mutation
 
 // Random يدوي
 int seed1 = 7;
+// دالة توليد أرقام عشوائية
 int myRand()
 {
     seed1 = (seed1 * 5 + 3) % 1000;
@@ -17,12 +19,13 @@ int myRand()
 struct State
 {
     int queen[N];
-    int fitness;
+    int fitness; // قيمة الـ Fitness
 };
 // العمليات الجينية
 class Genetic
 {
 private:
+// دالة القيمة المطلقة
     int absValue(int x)
     {
         if(x < 0){
@@ -33,13 +36,17 @@ private:
 
 public:
     // حساب الـ Fitness
+    // عدد الأزواج التي لا تهاجم بعضها
     int calculateFitness(int arr[N])
     {
         int safe = 0;
+        // مقارنة كل Queen مع البقية
         for(int i=0;i<N;i++){
             for(int j=i+1;j<N;j++){
+                // هل يوجد هجوم أفقي؟
                 bool sameRow =(arr[i] == arr[j]);
                 bool sameDiagonal =(absValue(arr[i]-arr[j])==absValue(i-j));
+                // إذا لم يكن هناك هجوم
                 if(!sameRow&&!sameDiagonal){
                     safe++;
                 }
@@ -50,6 +57,7 @@ public:
     // إنشاء State عشوائية
     State randomState(){
         State s;
+        // وضع Queen عشوائية في كل عمود
         for(int i=0;i<N;i++){
             s.queen[i]=myRand()%N;
         }
@@ -155,6 +163,7 @@ private:
 
 public:
     void solve(int start[N],int caseNum,int method){
+        clock_t startTime = clock();
         State pop[POP];
         // أول State من المستخدم
         for(int i=0;i<N;i++){
@@ -205,6 +214,7 @@ public:
                 pop[i] =newPop[i];
             }
         }
+        double elapsed =double(clock() - startTime) / CLOCKS_PER_SEC;
         // طباعة النتائج
         cout<<"\nCase "<<caseNum;
         if(bestEver.fitness == 28){
@@ -215,6 +225,7 @@ public:
         }
         cout<<"Fitness : "<<bestEver.fitness<<" / 28\n";
         cout<<"Generations : "<<usedGen<<endl;
+        cout<<"Time : "<<elapsed<<" sec"<<endl;
         cout<<"Best State : [";
         for(int i=0;i<N;i++){
             cout<<bestEver.queen[i]+1;
